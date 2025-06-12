@@ -1,0 +1,3 @@
+[submodule "src/DiceDB/dicedb-protos"]
+	path = src/DiceDB/dicedb-protos
+	url = https://github.com/N-E-W-T-O-N/dicedb-protos
