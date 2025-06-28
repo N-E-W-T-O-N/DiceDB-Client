@@ -54,6 +54,7 @@ namespace DiceDB
             Result r = Result.Parser.ParseFrom(payload);
             Print(r);
         }
+        
         public void Receive()
         {
             byte[] lengthBytes = new byte[4];

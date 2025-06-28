@@ -1,13 +1,15 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Protobuf.Collections;
 
 namespace DiceDB
 {
     public sealed class DiceClient
     {
         private readonly TcpServer _tcp;
-        private SemaphoreSlim _semophore = new   SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _semophore = new   SemaphoreSlim(1, 1);
         
         public DiceClient(string host="localhost", int port=7379)
         {
@@ -33,6 +35,26 @@ namespace DiceDB
             }
            
         }
+
+        public async Task SendAsync(string command)
+        {
+            List<string> cmdArr = command.Split(" ").ToList();
+            var c = cmdArr.RemoveAt(0);
+            
+            Command cmd = new Command(){Cmd = cmdArr[0] ,Args={cmdArr[0]} }; 
+                
+            
+            await _semophore.WaitAsync();
+            
+            try{}
+            finally
+            {
+                _semophore.Release();
+                
+            }
+        }
+
+        
         
         public void Close()
         {

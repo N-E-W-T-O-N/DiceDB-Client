@@ -13,9 +13,13 @@
     <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
   </ItemGroup>
 
-   <ItemGroup>
+   <ItemGroup >
     <Protobuf Include="dicedb-protos/*.proto" OutputDir="Protos" />
   </ItemGroup>
+
+   <ItemGroup>
+     <Folder Include="dicedb-protos\wal\" />
+   </ItemGroup>
 
 </Project>
 
