@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
     <RootNamespace>DiceDB</RootNamespace>
+    <ProtoRoot>$(MSBuildProjectDirectory)/dicedb-protos</ProtoRoot>
+    <ProtoOut>$(MSBuildProjectDirectory)/Protos</ProtoOut>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,9 +15,44 @@
     <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
   </ItemGroup>
 
-   <ItemGroup>
-    <Protobuf Include="dicedb-protos/*.proto" OutputDir="Protos" />
-  </ItemGroup>
+  <PropertyGroup>
+    <ProtoRoot>$(MSBuildProjectDirectory)/dicedb-protos</ProtoRoot>
+    <ProtoOut>$(MSBuildProjectDirectory)/Protos</ProtoOut>
+  </PropertyGroup>
+
+
+
+  <!--    <PropertyGroup>
+            <protoc_tools>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)/../tools/'))</protoc_tools>
+            <protoc_linux64>$([System.IO.Path]::GetFullPath('$(protoc_tools)/linux_x64/protoc'))</protoc_linux64>
+            <protoc_linux86>$([System.IO.Path]::GetFullPath('$(protoc_tools)/linux_x86/protoc'))</protoc_linux86>
+            <protoc_macosx64>$([System.IO.Path]::GetFullPath('$(protoc_tools)/macosx_x64/protoc'))</protoc_macosx64>
+            <protoc_macosx86>$([System.IO.Path]::GetFullPath('$(protoc_tools)/macosx_x86/protoc'))</protoc_macosx86>
+            <protoc_windows64>$([System.IO.Path]::GetFullPath('$(protoc_tools)/windows_x64/protoc.exe'))</protoc_windows64>
+            <protoc_windows86>$([System.IO.Path]::GetFullPath('$(protoc_tools)/windows_x86/protoc.exe'))</protoc_windows86>
+        </PropertyGroup>-->
+
+
+  <Target Name="GenerateProtobuf" BeforeTargets="BeforeBuild">
+    <Exec Command="chmod +x $(protoc_linux64)" />
+    <MakeDir Directories="$(ProtoOut)" />
+    <Exec Command="$(protoc_linux64) &#45;&#45;proto_path=$(ProtoRoot) &#45;&#45;csharp_out=$(ProtoOut) &#45;&#45;csharp_opt=file_extension=.cs $(ProtoRoot)/*.proto" />
+  </Target>
+
+  <Target Name="GenerateProtobuf" BeforeTargets="BeforeBuild" >
+    <MakeDir Directories="$(MSBuildProjectDirectory)/Protos" />
+    <Exec Command="&quot;$(protoc_linux64)&quot; --proto_path=$(ProtoRoot) --csharp_out=$(ProtoOut) --csharp_opt=file_extension=.cs $(ProtoRoot)/*.proto" />
+  </Target> -->
+
+  <!--<Target Name="GenerateProtobuf" BeforeTargets="BeforeBuild">
+        <Exec Command="&quot;$(protoc_linux64)&quot; &#45;&#45;proto_path=dicedb-protos &#45;&#45;csharp_out=Protos &#45;&#45;csharp_opt=file_extension=.cs dicedb-protos/*.proto" />
+    </Target>-->
+
+
+
+  <!--  <Target Name="GenerateProtos" BeforeTargets="BeforeBuild">
+          <MakeDir Directories="$(ProjectDir)Protos" />
+          <Exec Command="protoc &#45;&#45;proto_path=dicedb-protos &#45;&#45;csharp_out=Protos &#45;&#45;csharp_opt=file_extension=.cs,internal_access dicedb-protos/*.proto" />
+      </Target>-->
 
 </Project>
-
