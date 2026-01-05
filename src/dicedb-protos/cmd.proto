@@ -1,0 +1,12 @@
+//https://github.com/DiceDB/dicedb-protos/blob/af41d607f39b31e74d990b1644c21722493e8308/cmd.proto
+
+syntax = "proto3";
+
+package wire;
+option go_package = "./wire";
+option csharp_namespace = "DiceDB.Generated";
+
+message Command {
+    string cmd = 1;
+    repeated string args = 2;
+}

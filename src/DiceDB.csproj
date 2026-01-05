@@ -19,4 +19,8 @@
     <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Protobuf Include="dicedb-protos/*.proto" GrpcServices="None" ProtoRoot="dicedb-protos" Access="Internal" OutputDir="Generated" />
+  </ItemGroup>
+
 </Project>
