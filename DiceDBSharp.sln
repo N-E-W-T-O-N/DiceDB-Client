@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiceDB", "src\DiceDB\DiceDB.csproj", "{BD66D2D6-66AE-467C-B9E7-BA266B7E949D}"
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiceClient", "src\DiceClient.csproj", "{BD66D2D6-66AE-467C-B9E7-BA266B7E949D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{DF98AF6C-66B8-47F4-998E-C56EB352F47E}"
 EndProject
@@ -18,5 +21,8 @@ Global
 		{DF98AF6C-66B8-47F4-998E-C56EB352F47E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF98AF6C-66B8-47F4-998E-C56EB352F47E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF98AF6C-66B8-47F4-998E-C56EB352F47E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

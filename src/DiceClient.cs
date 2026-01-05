@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,7 +7,7 @@ namespace DiceDB
     public sealed class DiceClient
     {
         private readonly TcpServer _tcp;
-        private SemaphoreSlim _semophore = new   SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(10, 1);
         
         public DiceClient(string host="localhost", int port=7379)
         {
@@ -23,13 +23,12 @@ namespace DiceDB
 
         public async Task SendAsync(Command command)
         { 
-            await _semophore.WaitAsync();
+            await _semaphore.WaitAsync();
             
             try{}
             finally
             {
-                _semophore.Release();
-                
+                _semaphore.Release();
             }
            
         }
