@@ -44,3 +44,8 @@ public sealed class DiceClient(string host="localhost", int port=7839)
         await _tcp.DisposeAsync();
     }
 }
+using DiceDB.Generated;
+
+namespace DiceDB
+{
+}
