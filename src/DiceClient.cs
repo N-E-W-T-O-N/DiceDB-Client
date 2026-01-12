@@ -1,42 +1,46 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using DiceDB;
+using DiceDB.Generated;
 
-namespace DiceDB
+public sealed class DiceClient(string host="localhost", int port=7839)
 {
-    public sealed class DiceClient
+    private readonly DiceTcpHandler _tcp = new(host,port);
+
+    public async Task<ResponseGet> GetCommandAsync(string key)
     {
-        private readonly TcpServer _tcp;
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(10, 1);
         
-        public DiceClient(string host="localhost", int port=7379)
+        var cmd = new Command
         {
+            Cmd = CommandList.GET,
+            Args = { key }
+        };
 
-            if (string.IsNullOrWhiteSpace(host))
-                throw new ArgumentException("Please provide a host `IP ADDRESS`");
-            if(port<0)
-                throw new ArgumentOutOfRangeException(nameof(port),"Please provide a valid port number");
-            
-            _tcp = new TcpServer(host, port);           
-            
-        }
+        Result result = await _tcp.SendAsync(cmd);
+        return ResultMapper.MapGet(result);
+    }
 
-        public async Task SendAsync(Command command)
-        { 
-            await _semaphore.WaitAsync();
-            
-            try{}
-            finally
-            {
-                _semaphore.Release();
-            }
-           
-        }
-        
-        public void Close()
+    public async Task<ResponseSet> SetCommandAsync(string key, string value)
+    {
+        if (string.IsNullOrEmpty(key))
+            throw new ArgumentException("Key cannot be null or empty.", nameof(key));
+
+        var cmd = new Command
         {
-            _tcp.Close();
-        }
-        
+            Cmd = CommandList.SET,
+            Args = { key, value }
+        };
+
+        Result result = await _tcp.SendAsync(cmd);
+        return ResultMapper.MapSet(result);
+    }
+
+
+    public async Task ConnectAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task CloseAsync()
+    {
+        await _tcp.DisposeAsync();
     }
 }
