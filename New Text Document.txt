@@ -1,0 +1,44 @@
+Why Channel for WATCH, not Pipeline
+
+Pipeline is great for byte-level IO and parsing. Once a Result object is parsed, that's an application event.
+
+Channel<T> is the correct primitive for in-process pub/sub and backpressure for subscribers. It provides IAsyncEnumerable<T> via ReadAllAsync and is easy to expose to callers.
+So: use Pipelines to parse bytes → create Result objects → push Result into Channels for app subscribers.
+
+Notes, improvements & performance tips
+
+Avoid copies: currently we convert ReadOnlySequence<byte> to byte[] and call ParseFrom(byte[]). If parsing becomes the bottleneck you can:
+
+Use CodedInputStream over ReadOnlySequence (advanced) or parse from a Stream directly.
+
+Reuse byte[] via ArrayPool<byte>.Shared.Rent() to reduce allocations.
+
+Backpressure: unbounded channels are simple. If many events can flood the client, consider bounded channels and handle WriteAsync backpressure (await), or drop-oldest policies.
+
+Atomic send: we use a SemaphoreSlim to prevent overlapping writes that would corrupt framing. Alternative: use Socket.SendAsync with IList<ArraySegment<byte>> to avoid copying length/payload into single array.
+
+Cancellation: CloseAsync cancels read loop and completes pipe/reader gracefully. Always provide cancellation to WatchAsync subscribers.
+
+Error handling: add logging and retry logic if connection drops, or implement reconnect with resume semantics.
+
+Message framing variant: your current protocol uses 4-byte network-order length. If you switch to protobuf's varint-delimited format, you can use WriteDelimitedTo(Stream) and ParseDelimitedFrom(Stream) on server/client.
+
+Final checklist for you to adapt
+
+Provide a correct Func<Result, string> resultKeySelector (I used a placeholder) so messages route to the right key subscription.
+
+If your Result protobuf structure uses different fields for notifications, change DispatchResult accordingly.
+
+Choose unbounded vs bounded channels depending on event volume.
+
+Optionally add a ReconnectAsync method if connection must be resilient.
+
+If you want, next I can:
+
+Convert parsing to zero-copy using CodedInputStream and ReadOnlySequence<byte> to avoid ToArray() allocations.
+
+Add reconnect/backoff & authentication.
+
+Provide an example server in C# that speaks the same 4-byte length framing so you can test locally.
+
+Which of those would you like me to implement now?
