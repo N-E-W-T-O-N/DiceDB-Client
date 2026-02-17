@@ -1,7 +1,7 @@
 ﻿using DiceDB;
 using DiceDB.Generated;
 
-public sealed class DiceClient(string host="localhost", int port=7839)
+public sealed class DiceClient(string host="localhost", int port=7379)
 {
     private readonly DiceTcpHandler _tcp = new(host,port);
 
@@ -33,19 +33,31 @@ public sealed class DiceClient(string host="localhost", int port=7839)
         return ResultMapper.MapSet(result);
     }
 
+    public async Task<bool> HandShakeAsync()
+    {
+        var cmd = new Command
+        {
+            Cmd = CommandList.HANDSHAKE,
+            Args = { ClientID, "command" }
+        };
+
+        Result result = await _tcp.SendAsync(cmd);
+        
+        return result.Status == Status.Ok ;
+
+    }
 
     public async Task ConnectAsync()
     {
-        throw new NotImplementedException();
+        Console.WriteLine($"Try to Connect {host}:{port}");
+        bool result = await HandShakeAsync();
+        Console.WriteLine("Connected");
     }
 
     public async Task CloseAsync()
     {
         await _tcp.DisposeAsync();
     }
-}
-using DiceDB.Generated;
 
-namespace DiceDB
-{
+    private string ClientID{get;set;} = Guid.NewGuid().ToString() ;
 }

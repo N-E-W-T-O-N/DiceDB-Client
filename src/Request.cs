@@ -29,7 +29,8 @@
         /// <summary>
         /// 
         /// </summary>
-        //SET,
+        public const string HANDSHAKE="HANDSHAKE";
+         //SET,
         //DEL,
         //EXISTS,
         //INCR,

@@ -7,6 +7,8 @@ DiceClient db = new();
 await db.ConnectAsync().ConfigureAwait(false);
 
 ResponseGet r = await db.GetCommandAsync("K1");
-ResponseSet re= await db.SetCommandAsync("","");
+Console.WriteLine(r.Value,r.Message);
+ResponseSet re= await db.SetCommandAsync("K1","va");
+r = await db.GetCommandAsync("K1");
 
 await db.CloseAsync();

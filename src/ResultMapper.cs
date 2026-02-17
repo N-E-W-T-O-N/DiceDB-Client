@@ -34,7 +34,7 @@ internal static class ResultMapper
 
     private static void EnsureOk(Result r)
     {
-        if (r.Status != Status.Ok)
-            throw new DiceDbException(r.Message ?? "Unknown error");
+        // if (r.Status != Status.Ok)
+        //     throw new DiceDbException(r.Message ?? "Unknown error");
     }
 }

@@ -81,7 +81,7 @@ public sealed class DiceTcpHandler : IAsyncDisposable
 
     private void Dispatch(Result r)
     {
-        if (r.Fingerprint64 != 0 &&
+        if (r.Fingerprint64 == 0 &&
             _pending.TryPeek( out var tcs))
         {
             tcs.TrySetResult(r);
